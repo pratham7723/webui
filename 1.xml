@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bookcatalog>
+    <book id ="1">
+        <title>XML Tutorial</title>
+        <Pages>400</Pages>
+        <price>500</price>
+        <type>E-Book</type>
+    </book>
+    <book id ="2">
+        <title>Javascript Tutorial </title>
+        <Pages>500</Pages>
+        <price>600</price>
+        <type>Hard Copy</type>
+    </book>
+</bookcatalog>
+

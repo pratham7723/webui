@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="main" align="center">
+      <h1 align="center">Simple example to fetch data from another file</h1>
+      <button type="button" value="Apple" onclick="updatePage()">Show Books</button>
+      <br><br>
+      <div id="update" style="border:5px blue dashed; width:50%;">
+        When you click the above button AJAX will update the contents of this div.
+      </div>
+    </div>
+
+    <script>
+      function updatePage() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState === 4 && this.status === 200) {
+            var xmlDoc = this.responseXML;
+            var books = xmlDoc.getElementsByTagName("book");
+            var output = "<h2>Book Catalog</h2>";
+
+            for (var i = 0; i < books.length; i++) {
+              var title = books[i].getElementsByTagName("title")[0].textContent;
+              var pages = books[i].getElementsByTagName("Pages")[0].textContent;
+              var price = books[i].getElementsByTagName("price")[0].textContent;
+              var type = books[i].getElementsByTagName("type")[0].textContent;
+
+              output += "<p><strong>Title:</strong> " + title + "<br>" +
+                        "<strong>Pages:</strong> " + pages + "<br>" +
+                        "<strong>Price:</strong> " + price + "<br>" +
+                        "<strong>Type:</strong> " + type + "</p><hr>";
+            }
+
+            document.getElementById("update").innerHTML = output;
+          } else if (this.readyState === 4) {
+            document.getElementById("update").innerHTML = "<h2>Some error occurred</h2>";
+          }
+        };
+
+        xhttp.open("GET", "1.xml", true);
+        xhttp.send();
+      }
+    </script>
+  </body>
+</html>
