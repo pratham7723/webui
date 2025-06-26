@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fade Toggle Image</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+      text-align: center;
+    }
+    .fade-container {
+      margin-top: 30px;
+      text-align: center;
+    }
+    img {
+      width: 1300px;
+      max-width: 100%;
+      display: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+  <script>
+    $(document).ready(function() {
+      $('#toggleFade').click(function() {
+        $('#fadeImage').fadeToggle(500, function() {
+          const isVisible = $(this).is(':visible');
+          $('#toggleFade').text(isVisible ? 'Fade Out Image' : 'Fade In Image');
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <h2>Fade In / Fade Out Image</h2>
+  <button id="toggleFade">Fade In Image</button>
+  <div class="fade-container">
+    <img id="fadeImage" src="image.jpg" alt="Placeholder Image" >
+  </div>
+</body>
+</html>
