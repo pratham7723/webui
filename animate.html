@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jQuery Animate Example</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+      padding: 50px;
+    }
+    #box {
+      width: 100px;
+      height: 100px;
+      background-color: #4CAF50;
+      position: relative;
+      margin: 0 auto;
+      border-radius: 10px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    $(document).ready(function() {
+      $('#animateBtn').click(function() {
+        $('#box')
+          .animate({ left: '+=200px', width: '150px', height: '150px', opacity: 0.5 }, 1000)
+          .animate({ left: '-=200px', width: '100px', height: '100px', opacity: 1 }, 1000);
+      });
+    });
+  </script>
+</head>
+<body>
+
+  <h2>jQuery Animate() Example</h2>
+
+  <div id="box"></div>
+
+  <button id="animateBtn">Animate Box</button>
+
+</body>
+</html>
