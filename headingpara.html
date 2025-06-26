@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Toggle Paragraphs</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    .section {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #fff;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .section h3 {
+      margin: 0;
+      cursor: pointer;
+      padding: 10px;
+      background: #eaeaea;
+    }
+    .section p {
+      display: none;
+      margin: 10px 0 0 0;
+    }
+      .controls {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .controls button {
+      margin: 0 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    $(document).ready(function() {
+      let allVisible = false;
+
+      $('#toggleAll').click(function() {
+        if (allVisible) {
+          $('.section p').stop(true, true).slideUp(300);
+          $(this).text('Show All');
+        } else {
+          $('.section p').stop(true, true).slideDown(300);
+          $(this).text('Hide All');
+        }
+        allVisible = !allVisible;
+      });
+      
+
+      
+      $('.section h3').click(function() {
+        var paragraph = $(this).next('p');
+        if (paragraph.is(':visible')) {
+          paragraph.stop(true, true).slideUp(300);
+        } else {
+          $('.section p:visible').stop(true, true).slideUp(300);
+          paragraph.stop(true, true).slideDown(300);
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="controls">
+    <button id="toggleAll">Show All</button>
+  </div>
+  <div class="section">
+    <h3>Heading 1</h3>
+    <p>This is the paragraph for Heading 1. It is only visible when the heading is clicked.</p>
+  </div>
+  <div class="section">
+    <h3>Heading 2</h3>
+    <p>This is the paragraph for Heading 2. It is only visible when the heading is clicked.</p>
+  </div>
+  <div class="section">
+    <h3>Heading 3</h3>
+    <p>This is the paragraph for Heading 3. It is only visible when the heading is clicked.</p>
+  </div>
+</body>
+</html>

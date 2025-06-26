@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Border Example</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    #message {
+      margin-top: 20px;
+      padding: 10px;
+      border: 2px dotted green;
+      transition: border 0.3s ease;
+    }
+  </style>
+  <script>
+    $(document).ready(function() {
+      let toggle = 0;
+      $('#toggleBtn').click(function() {
+        if (toggle % 2 === 0) {
+          $('#message').css('border', '2px dotted green');
+        } else {
+          $('#message').css('border', '2px solid green');
+        }
+        toggle++;
+      });
+    });
+  </script>
+</head>
+<body>
+  <center>
+    <button id="toggleBtn">Toggle Border Style</button>
+    <p id="message">Button was clicked!</p>
+  </center>
+</body>
+</html>

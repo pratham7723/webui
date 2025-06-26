@@ -1,0 +1,264 @@
+<!-- EXTENDED VERSION OF THE PERIODIC TABLE WITH ALL ELEMENTS PROPERLY POSITIONED -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Periodic Table</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .periodic-table {
+      display: grid;
+      grid-template-columns: repeat(18, 60px);
+      grid-template-rows: repeat(10, 60px);
+      gap: 5px;
+      justify-content: center;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 1200px;
+      margin: auto;
+    }
+    .element {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #000;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .alkali { background-color: #f28c8c; }
+    .alkaline { background-color: #f7c78b; }
+    .transition { background-color: #d5b3f3; }
+    .post-transition { background-color: #d3d3d3; }
+    .metalloids { background-color: #80d1d1; }
+    .nonmetals { background-color: #99db99; }
+    .halogens { background-color: #7faaff; }
+    .noble { background-color: #f58acb; }
+    .lanthanides { background-color: #ffb380; }
+    .actinides { background-color: #ff8c8c; }
+
+    .highlight {
+      background: rgba(255, 255, 255, 0.2) !important;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #000 !important;
+    }
+
+    .element span {
+      z-index: 1;
+      position: relative;
+    }
+
+    .group-links {
+      text-align: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      display: flex;
+      justify-content: center;
+    }
+    .group-link {
+      margin: 5px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #000;
+    }
+    .group-link[data-group="alkali"] { background-color: #f28c8c; }
+    .group-link[data-group="alkaline"] { background-color: #f7c78b; }
+    .group-link[data-group="transition"] { background-color: #d5b3f3; }
+    .group-link[data-group="post-transition"] { background-color: #d3d3d3; }
+    .group-link[data-group="metalloids"] { background-color: #80d1d1; }
+    .group-link[data-group="nonmetals"] { background-color: #99db99; }
+    .group-link[data-group="halogens"] { background-color: #7faaff; }
+    .group-link[data-group="noble"] { background-color: #f58acb; }
+    .group-link[data-group="lanthanides"] { background-color: #ffb380; }
+    .group-link[data-group="actinides"] { background-color: #ff8c8c; }
+
+    .empty {
+      background: transparent;
+      border: none;
+    }
+  </style>
+  <script>
+    $(document).ready(function () {
+      let previousGroup = null;
+      $('.group-link').click(function () {
+        const newGroup = $(this).data('group');
+        if (previousGroup) {
+          $('.highlight').each(function () {
+            $(this).removeClass('highlight').addClass(previousGroup);
+          });
+        }
+        $('.element').removeClass('highlight');
+        $('.' + newGroup).each(function () {
+          $(this).removeClass(newGroup).addClass('highlight');
+        });
+        previousGroup = newGroup;
+      });
+    });
+  </script>
+</head>
+<body>
+  <h2>Interactive Periodic Table</h2>
+  <div class="group-links">
+    <button class="group-link" data-group="alkali">Alkali Metals</button>
+    <button class="group-link" data-group="alkaline">Alkaline Earth Metals</button>
+    <button class="group-link" data-group="transition">Transition Metals</button>
+    <button class="group-link" data-group="post-transition">Post-transition Metals</button>
+    <button class="group-link" data-group="metalloids">Metalloids</button>
+    <button class="group-link" data-group="nonmetals">Reactive Nonmetals</button>
+    <button class="group-link" data-group="halogens">Halogens</button>
+    <button class="group-link" data-group="noble">Noble Gases</button>
+    <button class="group-link" data-group="lanthanides">Lanthanides</button>
+    <button class="group-link" data-group="actinides">Actinides</button>
+  </div>
+  <div class="periodic-table">
+    <!-- Elements will be inserted here with full grid placement -->
+    <div class="element nonmetals" style="grid-column: 1; grid-row: 1;"><span>H</span></div>
+    <div class="element noble" style="grid-column: 18; grid-row: 1;"><span>He</span></div>
+
+    <div class="element alkali" style="grid-column: 1; grid-row: 2;"><span>Li</span></div>
+    <div class="element alkaline" style="grid-column: 2; grid-row: 2;"><span>Be</span></div>
+    <div class="element metalloids" style="grid-column: 13; grid-row: 2;"><span>B</span></div>
+    <div class="element nonmetals" style="grid-column: 14; grid-row: 2;"><span>C</span></div>
+    <div class="element nonmetals" style="grid-column: 15; grid-row: 2;"><span>N</span></div>
+    <div class="element nonmetals" style="grid-column: 16; grid-row: 2;"><span>O</span></div>
+    <div class="element halogens" style="grid-column: 17; grid-row: 2;"><span>F</span></div>
+    <div class="element noble" style="grid-column: 18; grid-row: 2;"><span>Ne</span></div>
+
+    <div class="element alkali" style="grid-column: 1; grid-row: 3;"><span>Na</span></div>
+    <div class="element alkaline" style="grid-column: 2; grid-row: 3;"><span>Mg</span></div>
+    <div class="element post-transition" style="grid-column: 13; grid-row: 3;"><span>Al</span></div>
+    <div class="element metalloids" style="grid-column: 14; grid-row: 3;"><span>Si</span></div>
+    <div class="element nonmetals" style="grid-column: 15; grid-row: 3;"><span>P</span></div>
+    <div class="element nonmetals" style="grid-column: 16; grid-row: 3;"><span>S</span></div>
+    <div class="element halogens" style="grid-column: 17; grid-row: 3;"><span>Cl</span></div>
+    <div class="element noble" style="grid-column: 18; grid-row: 3;"><span>Ar</span></div>
+
+    <div class="element alkali" style="grid-column: 1; grid-row: 4;"><span>K</span></div>
+    <div class="element alkaline" style="grid-column: 2; grid-row: 4;"><span>Ca</span></div>
+    <div class="element transition" style="grid-column: 3; grid-row: 4;"><span>Sc</span></div>
+    <div class="element transition" style="grid-column: 4; grid-row: 4;"><span>Ti</span></div>
+    <div class="element transition" style="grid-column: 5; grid-row: 4;"><span>V</span></div>
+    <div class="element transition" style="grid-column: 6; grid-row: 4;"><span>Cr</span></div>
+    <div class="element transition" style="grid-column: 7; grid-row: 4;"><span>Mn</span></div>
+    <div class="element transition" style="grid-column: 8; grid-row: 4;"><span>Fe</span></div>
+    <div class="element transition" style="grid-column: 9; grid-row: 4;"><span>Co</span></div>
+    <div class="element transition" style="grid-column: 10; grid-row: 4;"><span>Ni</span></div>
+    <div class="element transition" style="grid-column: 11; grid-row: 4;"><span>Cu</span></div>
+    <div class="element transition" style="grid-column: 12; grid-row: 4;"><span>Zn</span></div>
+    <div class="element post-transition" style="grid-column: 13; grid-row: 4;"><span>Ga</span></div>
+    <div class="element metalloids" style="grid-column: 14; grid-row: 4;"><span>Ge</span></div>
+    <div class="element metalloids" style="grid-column: 15; grid-row: 4;"><span>As</span></div>
+    <div class="element nonmetals" style="grid-column: 16; grid-row: 4;"><span>Se</span></div>
+    <div class="element halogens" style="grid-column: 17; grid-row: 4;"><span>Br</span></div>
+    <div class="element noble" style="grid-column: 18; grid-row: 4;"><span>Kr</span></div>
+
+    <div class="element alkali" style="grid-column: 1; grid-row: 5;"><span>Rb</span></div>
+    <div class="element alkaline" style="grid-column: 2; grid-row: 5;"><span>Sr</span></div>
+    <div class="element transition" style="grid-column: 3; grid-row: 5;"><span>Y</span></div>
+    <div class="element transition" style="grid-column: 4; grid-row: 5;"><span>Zr</span></div>
+    <div class="element transition" style="grid-column: 5; grid-row: 5;"><span>Nb</span></div>
+    <div class="element transition" style="grid-column: 6; grid-row: 5;"><span>Mo</span></div>
+    <div class="element transition" style="grid-column: 7; grid-row: 5;"><span>Tc</span></div>
+    <div class="element transition" style="grid-column: 8; grid-row: 5;"><span>Ru</span></div>
+    <div class="element transition" style="grid-column: 9; grid-row: 5;"><span>Rh</span></div>
+    <div class="element transition" style="grid-column: 10; grid-row: 5;"><span>Pd</span></div>
+    <div class="element transition" style="grid-column: 11; grid-row: 5;"><span>Ag</span></div>
+    <div class="element transition" style="grid-column: 12; grid-row: 5;"><span>Cd</span></div>
+    <div class="element post-transition" style="grid-column: 13; grid-row: 5;"><span>In</span></div>
+    <div class="element post-transition" style="grid-column: 14; grid-row: 5;"><span>Sn</span></div>
+    <div class="element post-transition" style="grid-column: 15; grid-row: 5;"><span>Sb</span></div>
+    <div class="element post-transition" style="grid-column: 16; grid-row: 5;"><span>Te</span></div>
+    <div class="element halogens" style="grid-column: 17; grid-row: 5;"><span>I</span></div>
+    <div class="element noble" style="grid-column: 18; grid-row: 5;"><span>Xe</span></div>
+
+    <div class="element alkali" style="grid-column: 1; grid-row: 6;"><span>Cs</span></div>
+    <div class="element alkaline" style="grid-column: 2; grid-row: 6;"><span>Ba</span></div>
+    <div class="element lanthanides" style="grid-column: 3; grid-row: 6;"><span>La</span></div>
+    <div class="element transition" style="grid-column: 4; grid-row: 6;"><span>Hf</span></div>
+    <div class="element transition" style="grid-column: 5; grid-row: 6;"><span>Ta</span></div>
+    <div class="element transition" style="grid-column: 6; grid-row: 6;"><span>W</span></div>
+    <div class="element transition" style="grid-column: 7; grid-row: 6;"><span>Re</span></div>
+    <div class="element transition" style="grid-column: 8; grid-row: 6;"><span>Os</span></div>
+    <div class="element transition" style="grid-column: 9; grid-row: 6;"><span>Ir</span></div>
+    <div class="element transition" style="grid-column: 10; grid-row: 6;"><span>Pt</span></div>
+    <div class="element transition" style="grid-column: 11; grid-row: 6;"><span>Au</span></div>
+    <div class="element transition" style="grid-column: 12; grid-row: 6;"><span>Hg</span></div>
+    <div class="element post-transition" style="grid-column: 13; grid-row: 6;"><span>Tl</span></div>
+    <div class="element post-transition" style="grid-column: 14; grid-row: 6;"><span>Pb</span></div>
+    <div class="element post-transition" style="grid-column: 15; grid-row: 6;"><span>Bi</span></div>
+    <div class="element post-transition" style="grid-column: 16; grid-row: 6;"><span>Po</span></div>
+    <div class="element halogens" style="grid-column: 17; grid-row: 6;"><span>At</span></div>
+    <div class="element noble" style="grid-column: 18; grid-row: 6;"><span>Rn</span></div>
+
+    <div class="element alkali" style="grid-column: 1; grid-row: 7;"><span>Fr</span></div>
+    <div class="element alkaline" style="grid-column: 2; grid-row: 7;"><span>Ra</span></div>
+    <div class="element actinides" style="grid-column: 3; grid-row: 7;"><span>Ac</span></div>
+    <div class="element transition" style="grid-column: 4; grid-row: 7;"><span>Rf</span></div>
+    <div class="element transition" style="grid-column: 5; grid-row: 7;"><span>Db</span></div>
+    <div class="element transition" style="grid-column: 6; grid-row: 7;"><span>Sg</span></div>
+    <div class="element transition" style="grid-column: 7; grid-row: 7;"><span>Bh</span></div>
+    <div class="element transition" style="grid-column: 8; grid-row: 7;"><span>Hs</span></div>
+    <div class="element transition" style="grid-column: 9; grid-row: 7;"><span>Mt</span></div>
+    <div class="element transition" style="grid-column: 10; grid-row: 7;"><span>Ds</span></div>
+    <div class="element transition" style="grid-column: 11; grid-row: 7;"><span>Rg</span></div>
+    <div class="element transition" style="grid-column: 12; grid-row: 7;"><span>Cn</span></div>
+    <div class="element post-transition" style="grid-column: 13; grid-row: 7;"><span>Nh</span></div>
+    <div class="element post-transition" style="grid-column: 14; grid-row: 7;"><span>Fl</span></div>
+    <div class="element post-transition" style="grid-column: 15; grid-row: 7;"><span>Mc</span></div>
+    <div class="element post-transition" style="grid-column: 16; grid-row: 7;"><span>Lv</span></div>
+    <div class="element halogens" style="grid-column: 17; grid-row: 7;"><span>Ts</span></div>
+    <div class="element noble" style="grid-column: 18; grid-row: 7;"><span>Og</span></div>
+
+    <!-- Lanthanides Row -->
+    <div class="element lanthanides" style="grid-column: 4; grid-row: 9;"><span>Ce</span></div>
+    <div class="element lanthanides" style="grid-column: 5; grid-row: 9;"><span>Pr</span></div>
+    <div class="element lanthanides" style="grid-column: 6; grid-row: 9;"><span>Nd</span></div>
+    <div class="element lanthanides" style="grid-column: 7; grid-row: 9;"><span>Pm</span></div>
+    <div class="element lanthanides" style="grid-column: 8; grid-row: 9;"><span>Sm</span></div>
+    <div class="element lanthanides" style="grid-column: 9; grid-row: 9;"><span>Eu</span></div>
+    <div class="element lanthanides" style="grid-column: 10; grid-row: 9;"><span>Gd</span></div>
+    <div class="element lanthanides" style="grid-column: 11; grid-row: 9;"><span>Tb</span></div>
+    <div class="element lanthanides" style="grid-column: 12; grid-row: 9;"><span>Dy</span></div>
+    <div class="element lanthanides" style="grid-column: 13; grid-row: 9;"><span>Ho</span></div>
+    <div class="element lanthanides" style="grid-column: 14; grid-row: 9;"><span>Er</span></div>
+    <div class="element lanthanides" style="grid-column: 15; grid-row: 9;"><span>Tm</span></div>
+    <div class="element lanthanides" style="grid-column: 16; grid-row: 9;"><span>Yb</span></div>
+    <div class="element lanthanides" style="grid-column: 17; grid-row: 9;"><span>Lu</span></div>
+
+    <!-- Actinides Row -->
+    <div class="element actinides" style="grid-column: 4; grid-row: 10;"><span>Th</span></div>
+    <div class="element actinides" style="grid-column: 5; grid-row: 10;"><span>Pa</span></div>
+    <div class="element actinides" style="grid-column: 6; grid-row: 10;"><span>U</span></div>
+    <div class="element actinides" style="grid-column: 7; grid-row: 10;"><span>Np</span></div>
+    <div class="element actinides" style="grid-column: 8; grid-row: 10;"><span>Pu</span></div>
+    <div class="element actinides" style="grid-column: 9; grid-row: 10;"><span>Am</span></div>
+    <div class="element actinides" style="grid-column: 10; grid-row: 10;"><span>Cm</span></div>
+    <div class="element actinides" style="grid-column: 11; grid-row: 10;"><span>Bk</span></div>
+    <div class="element actinides" style="grid-column: 12; grid-row: 10;"><span>Cf</span></div>
+    <div class="element actinides" style="grid-column: 13; grid-row: 10;"><span>Es</span></div>
+    <div class="element actinides" style="grid-column: 14; grid-row: 10;"><span>Fm</span></div>
+    <div class="element actinides" style="grid-column: 15; grid-row: 10;"><span>Md</span></div>
+    <div class="element actinides" style="grid-column: 16; grid-row: 10;"><span>No</span></div>
+    <div class="element actinides" style="grid-column: 17; grid-row: 10;"><span>Lr</span></div>
+  </div>
+</body>
+</html>
