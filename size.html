@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Window Resize Alert</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 2rem 2.5rem;
+            max-width: 350px;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Resize the Window</h2>
+        <p>Every time you resize the window, the current size will be shown below.</p>
+        <div id="sizeDisplay" style="font-size:1.2rem; color:#2563eb; margin-top:1.2em;"></div>
+    </div>
+    <script>
+        function updateSizeDisplay() {
+            const w = $(window).width();
+            const h = $(window).height();
+            $('#sizeDisplay').text('Window size: ' + w + ' x ' + h + ' px');
+            alert('New window size is ' + w + ' x ' + h + ' px');
+        }
+        $(window).on('resize', updateSizeDisplay);
+        // Initial display
+        updateSizeDisplay();
+    </script>
+</body>
+</html>
