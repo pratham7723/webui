@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Typing Check</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
+            border-radius: 18px;
+            padding: 2.5rem 2rem 2rem 2rem;
+            max-width: 480px;
+            width: 100%;
+            margin: 2rem;
+        }
+        .card h2 {
+            margin-top: 0;
+            font-size: 2rem;
+            color: #2d3748;
+            letter-spacing: 1px;
+        }
+        .section {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            font-weight: 500;
+            color: #4a5568;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        #customTarget {
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 0.5rem;
+            box-sizing: border-box;
+        }
+        #target {
+            display: block;
+            background: #f1f5f9;
+            border-radius: 6px;
+            padding: 0.7rem 1rem;
+            font-size: 1.1rem;
+            font-family: monospace;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+        #fox {
+            width: 100%;
+            font-size: 1.1rem;
+            font-family: monospace;
+            border: 1.5px solid #60a5fa;
+            border-radius: 6px;
+            padding: 0.7rem 1rem;
+            background: #f0f9ff;
+            margin-bottom: 0.5rem;
+            min-height: 70px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        #result {
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+            border: 1px dashed #60a5fa;
+            border-radius: 6px;
+            background-color: #f8fafc;
+            min-height: 50px;
+            padding: 0.7rem 1rem;
+            color: #22223b;
+            box-sizing: border-box;
+        }
+        .space {
+            background-color: #bae6fd;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+        .incorrect {
+            background-color: #fecaca;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        .btn {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #2563eb;
+        }
+        @media (max-width: 600px) {
+            .card {
+                padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+                max-width: 98vw;
+            }
+            #target, #fox, #result {
+                font-size: 1rem;
+                padding: 0.5rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>Typing Practice</h2>
+        <div class="section">
+            <label for="customTarget">Custom Text</label>
+            <input type="text" id="customTarget" value="the quick brown fox jumps over the lazy dog" />
+        </div>
+        <div class="section">
+            <label>Reference</label>
+            <span id="target">the quick brown fox jumps over the lazy dog</span>
+        </div>
+        <div class="section">
+            <label for="fox">Your Input</label>
+            <textarea id="fox" rows="3"></textarea>
+        </div>
+        <div class="section">
+            <label>Result</label>
+            <div id="result"></div>
+        </div>
+        <div class="actions">
+            <button class="btn" id="resetBtn" type="button">Reset</button>
+        </div>
+    </div>
+    <script>
+        function getTarget() {
+            return $('#customTarget').val();
+        }
+
+        function updateTargetDisplay() {
+            $('#target').text(getTarget());
+        }
+
+        function checkInput() {
+            const target = getTarget();
+            const input = $('#fox').val();
+            const $result = $('#result');
+            $result.empty();
+
+            for (let i = 0; i < input.length; i++) {
+                const userChar = input[i];
+                const expectedChar = target[i] || '';
+
+                if (userChar === ' ' && expectedChar !== ' ') {
+                    $result.append('<span class="space">_</span>');
+                } else if (userChar !== expectedChar) {
+                    $result.append(`<span class="incorrect">${userChar === ' ' ? '_' : userChar}</span>`);
+                } else {
+                    $result.append(userChar);
+                }
+            }
+
+            if (input === target && target.length > 0) {
+                setTimeout(() => {
+                    alert("Well done! You typed the entire sentence correctly.");
+                }, 100);
+            }
+        }
+
+        $('#fox').on('input', checkInput);
+        $('#customTarget').on('input', function() {
+            updateTargetDisplay();
+            $('#fox').val('');
+            $('#result').empty();
+        });
+        $('#resetBtn').on('click', function() {
+            $('#fox').val('');
+            $('#result').empty();
+            $('#customTarget').val('the quick brown fox jumps over the lazy dog');
+            updateTargetDisplay();
+        });
+
+        // Initialize
+        updateTargetDisplay();
+    </script>
+</body>
+
+</html>

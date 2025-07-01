@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery .on('change') Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 2rem 2.5rem;
+            max-width: 400px;
+            width: 100%;
+        }
+        .section {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            font-weight: 500;
+            color: #374151;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 0.3rem;
+            box-sizing: border-box;
+        }
+        .result {
+            color: #2563eb;
+            font-size: 1.05rem;
+            min-height: 1.2em;
+        }
+        .dropdown-result {
+            color: #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>jQuery .on('change') Example</h2>
+        <div class="section">
+            <label for="changeText">Text Box (change event):</label>
+            <input type="text" id="changeText" placeholder="Type and change..." />
+        </div>
+        <div class="section">
+            <label for="changeDropdown">Dropdown (change event):</label>
+            <select id="changeDropdown">
+                <option value="">-- Select an option --</option>
+                <option value="Apple">Apple</option>
+                <option value="Banana">Banana</option>
+                <option value="Cherry">Cherry</option>
+            </select>
+        </div>
+        <div class="section">
+            <div id="singleResult" class="result"></div>
+        </div>
+    </div>
+    <script>
+        $('#changeText').on('change', function() {
+            const val = $(this).val();
+            if (val) {
+                $('#singleResult').text('Text box value: ' + val);
+            } else {
+                $('#singleResult').text('');
+            }
+        });
+        $('#changeDropdown').on('change', function() {
+            const val = $(this).val();
+            if (val) {
+                $('#singleResult').text('Dropdown selected: ' + val);
+            } else {
+                $('#singleResult').text('');
+            }
+        });
+    </script>
+</body>
+</html>

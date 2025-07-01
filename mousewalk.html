@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jQuery Mouse Walk Example</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    .walk-box {
+      width: 300px;
+      height: 200px;
+      border: 3px solid #333;
+      background-color: #f0f0f0;
+      margin: 20px;
+      position: relative;
+      cursor: crosshair;
+    }
+    
+    .stats {
+      margin: 20px;
+      font-family: Arial, sans-serif;
+    }
+    
+    .stats div {
+      margin: 5px 0;
+      padding: 5px;
+      background-color: #e8f4f8;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Mouse Walk Tracker</h2>
+  <p>Hover over the box and move your mouse to see the tracking!</p>
+  
+  <div class="walk-box" id="walkBox">
+    <div style="position: absolute; top: 10px; left: 10px; color: #666;">
+      Move mouse here
+    </div>
+  </div>
+  
+  <div class="stats">
+    <div>Steps taken: <span id="steps">0</span></div>
+    <div>Total distance: <span id="distance">0</span> pixels</div>
+    <div>Current position: <span id="position">(0, 0)</span></div>
+    <div id="message"></div>
+  </div>
+  
+  <script>
+    var steps = 0;
+    var totalDistance = 0;
+    var lastX = 0;
+    var lastY = 0;
+    var isFirstMove = true;
+    var milestone = 100;
+    
+    $("#walkBox").on("mousemove", function(e){
+      var currentX = e.clientX - $(this).offset().left;
+      var currentY = e.clientY - $(this).offset().top;
+      
+      if (!isFirstMove) {
+        // Calculate distance between current and last position
+        var distance = Math.sqrt(
+          Math.pow(currentX - lastX, 2) + 
+          Math.pow(currentY - lastY, 2)
+        );
+        totalDistance += distance;
+        steps++;
+      }
+      
+      lastX = currentX;
+      lastY = currentY;
+      isFirstMove = false;
+      
+      // Update displays
+      $("#steps").text(steps);
+      $("#distance").text(Math.round(totalDistance));
+      $("#position").text("(" + Math.round(currentX) + ", " + Math.round(currentY) + ")");
+      
+      // Check for milestones
+      if (steps >= milestone) {
+        $("#message").text("🎉 Wow! You've taken " + steps + " steps and traveled " + Math.round(totalDistance) + " pixels!");
+        milestone += 100;
+      }
+    });
+    
+    // Reset when mouse leaves the box
+    $("#walkBox").on("mouseleave", function(){
+      $("#message").text("Mouse left the box. Hover again to continue tracking!");
+    });
+  </script>
+</body>
+</html>

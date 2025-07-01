@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 2rem 2.5rem;
+            max-width: 350px;
+            width: 100%;
+        }
+        .section {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            font-weight: 500;
+            color: #374151;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 0.3rem;
+            box-sizing: border-box;
+        }
+        .error {
+            color: #dc2626;
+            font-size: 0.98rem;
+            margin-bottom: 0.5rem;
+        }
+        .success {
+            color: #059669;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            color: #374151;
+        }
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 0.5em;
+        }
+        button {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="myForm" autocomplete="off">
+            <div class="section">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" />
+                <div id="nameError" class="error"></div>
+            </div>
+            <div class="section">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="agree" name="agree" />
+                    I agree to the terms and conditions
+                </label>
+                <div id="agreeError" class="error"></div>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        $('#myForm').on('submit', function(e) {
+            e.preventDefault();
+            let valid = true;
+            $('#nameError').text('');
+            $('#agreeError').text('');
+            $('#result').text('');
+
+            const name = $('#name').val().trim();
+            const agreed = $('#agree').is(':checked');
+
+            if (!name) {
+                $('#nameError').text('Please enter your name.');
+                valid = false;
+            }
+            if (!agreed) {
+                $('#agreeError').text('You must agree to the terms.');
+                valid = false;
+            }
+            if (valid) {
+                $('#result').html('<div class="success">success</div>');
+                $('#myForm')[0].reset();
+            }
+        });
+    </script>
+</body>
+</html>
