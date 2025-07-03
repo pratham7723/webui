@@ -247,6 +247,24 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 18px;
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .back-btn:hover {
+            background: #e9ecef;
+            border-color: #4CAF50;
+        }
     </style>
 </head>
 <body>
@@ -258,214 +276,162 @@
                 📁 View on GitHub
             </a>
         </div>
-        
         <div class="content">
             <div class="stats">
-                <span id="fileCount">0</span> projects available
+                <span id="fileCount">0</span> folders available
             </div>
-            
             <div class="search-container">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search projects...">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search folders...">
             </div>
-            
+            <button class="back-btn" style="display:none">⬅️ Back to Folders</button>
             <div id="loading" class="loading">
                 <div class="spinner"></div>
                 <p>Loading projects...</p>
             </div>
-            
-            <div id="filesGrid" class="files-grid" style="display: none;">
-                <!-- Files will be populated here -->
-            </div>
-            
+            <div id="filesGrid" class="files-grid" style="display: none;"></div>
             <div id="noResults" class="no-results" style="display: none;">
-                <p>No projects found matching your search.</p>
+                <p>No items found matching your search.</p>
             </div>
         </div>
-        
         <div class="footer">
             <p>Hosted on Vercel | Built with HTML, CSS, and jQuery</p>
         </div>
     </div>
-
     <script>
         $(document).ready(function() {
-            // Function to get file description based on filename
-            function getFileDescription(filename) {
-                const descriptions = {
-                    'timetablejquery.html': 'Interactive timetable where hovering over any cell highlights both the row and column simultaneously.',
-                    'jqueryperodictable.html': 'Interactive periodic table with element information and hover effects.',
-                    'keypress.html': 'Demonstrates various keyboard events and their handling with jQuery.',
-                    'submit.html': 'Interactive form with validation and submission handling.',
-                    'onchange.html': 'Shows how to handle change events in form elements.',
-                    'mousewalk.html': 'Tracks mouse movement and creates visual effects.',
-                    'mouseupdown.html': 'Demonstrates mouse up and down event handling.',
-                    'animate.html': 'Various jQuery animation effects and transitions.',
-                    'fadeinout.html': 'Demonstrates fade in and fade out animations.',
-                    'headingpara.html': 'Interactive headings and paragraphs with jQuery effects.',
-                    'jqueryborder.html': 'Dynamic border effects and styling with jQuery.',
-                    'ajax.html': 'Basic AJAX functionality demonstration.',
-                    'size.html': 'Demonstrates element sizing and dimension manipulation.',
-                    '1.html': 'Basic HTML demonstration page.'
-                };
-                
-                return descriptions[filename] || 'Interactive web demonstration with jQuery and JavaScript.';
-            }
+            let allFolders = {};
+            let currentFolder = null;
+            let allFolderNames = [];
 
-            // Function to get file title based on filename
             function getFileTitle(filename) {
-                const titles = {
-                    'timetablejquery.html': 'Timetable with Row/Column Highlighting',
-                    'jqueryperodictable.html': 'Periodic Table',
-                    'keypress.html': 'Keyboard Events Demo',
-                    'submit.html': 'Form Submission Demo',
-                    'onchange.html': 'Change Events Demo',
-                    'mousewalk.html': 'Mouse Movement Tracker',
-                    'mouseupdown.html': 'Mouse Up/Down Events',
-                    'animate.html': 'jQuery Animations',
-                    'fadeinout.html': 'Fade In/Out Effects',
-                    'headingpara.html': 'Heading and Paragraph Demo',
-                    'jqueryborder.html': 'Border Effects',
-                    'ajax.html': 'AJAX Demo',
-                    'size.html': 'Element Size Demo',
-                    '1.html': 'Basic HTML Demo'
-                };
-                
-                // Generate title from filename if not in predefined list
-                if (!titles[filename]) {
-                    const nameWithoutExt = filename.replace('.html', '');
-                    return nameWithoutExt.charAt(0).toUpperCase() + nameWithoutExt.slice(1).replace(/([A-Z])/g, ' $1');
-                }
-                
-                return titles[filename];
+                return filename.split('/').pop().replace('.html', '');
             }
-
-            // Function to check if a file exists
-            function checkFileExists(filename) {
-                return new Promise((resolve) => {
-                    $.ajax({
-                        url: filename,
-                        method: 'HEAD',
-                        timeout: 3000,
-                        success: function() {
-                            resolve(true);
-                        },
-                        error: function() {
-                            resolve(false);
+            function getFileDescription(filename) {
+                return 'HTML demo: ' + filename;
+            }
+            function discoverHtmlFiles() {
+                $.getJSON('files.json', function(files) {
+                    // Group files by top-level folder
+                    allFolders = {};
+                    files.forEach(filename => {
+                        const parts = filename.split('/');
+                        if (parts.length === 2) {
+                            const folder = parts[0];
+                            if (!allFolders[folder]) allFolders[folder] = [];
+                            allFolders[folder].push(filename);
                         }
                     });
+                    allFolderNames = Object.keys(allFolders).sort();
+                    renderFolders(allFolderNames);
                 });
             }
-
-            // Function to discover HTML files by checking each known file
-            async function discoverHtmlFiles() {
-                const knownFiles = [
-                    'timetablejquery.html',
-                    'jqueryperodictable.html',
-                    'keypress.html',
-                    'submit.html',
-                    'onchange.html',
-                    'mousewalk.html',
-                    'mouseupdown.html',
-                    'animate.html',
-                    'fadeinout.html',
-                    'headingpara.html',
-                    'jqueryborder.html',
-                    'ajax.html',
-                    'size.html',
-                    '1.html'
-                ];
-                
-                const existingFiles = [];
-                
-                // Check each file to see if it exists
-                for (const filename of knownFiles) {
-                    const exists = await checkFileExists(filename);
-                    if (exists) {
-                        existingFiles.push({
-                            name: filename,
-                            title: getFileTitle(filename),
-                            description: getFileDescription(filename)
-                        });
-                    }
-                }
-                
-                // Also try to discover any other HTML files by checking common patterns
-                const additionalFiles = [
-                    'demo.html', 'test.html', 'example.html', 'project.html',
-                    'app.html', 'main.html', 'index2.html', 'page.html'
-                ];
-                
-                for (const filename of additionalFiles) {
-                    const exists = await checkFileExists(filename);
-                    if (exists) {
-                        existingFiles.push({
-                            name: filename,
-                            title: getFileTitle(filename),
-                            description: getFileDescription(filename)
-                        });
-                    }
-                }
-                
-                renderFiles(existingFiles);
-            }
-
-            // Function to render files
-            function renderFiles(files) {
+            function renderFolders(folders) {
+                currentFolder = null;
+                $('.back-btn').hide();
+                $('#searchInput').attr('placeholder', 'Search folders...');
                 const grid = $('#filesGrid');
                 grid.empty();
-                
+                if (folders.length === 0) {
+                    $('#noResults').show();
+                    grid.hide();
+                } else {
+                    $('#noResults').hide();
+                    grid.show();
+                    folders.forEach(folder => {
+                        const card = $(`
+                            <div class="file-card folder-card" data-folder="${folder}">
+                                <div class="file-icon">📁</div>
+                                <div class="file-name">${folder}</div>
+                                <div class="file-description">${allFolders[folder].length} file(s)</div>
+                            </div>
+                        `);
+                        grid.append(card);
+                    });
+                }
+                $('#fileCount').text(folders.length);
+            }
+            function renderFiles(folder) {
+                currentFolder = folder;
+                $('.back-btn').show();
+                $('#searchInput').attr('placeholder', 'Search files...');
+                const files = allFolders[folder] || [];
+                const grid = $('#filesGrid');
+                grid.empty();
                 if (files.length === 0) {
                     $('#noResults').show();
                     grid.hide();
                 } else {
                     $('#noResults').hide();
                     grid.show();
-                    
                     files.forEach(file => {
-                        const githubUrl = `https://github.com/pratham7723/webui/blob/main/${file.name}`;
+                        const githubUrl = `https://github.com/pratham7723/webui/blob/main/index/${file}`;
                         const card = $(`
                             <div class="file-card">
                                 <div class="file-icon">📄</div>
-                                <div class="file-name">${file.title}</div>
-                                <div class="file-description">${file.description}</div>
+                                <div class="file-name">${getFileTitle(file)}</div>
+                                <div class="file-description">${getFileDescription(file)}</div>
                                 <div class="file-actions">
-                                    <a href="${file.name}" class="btn btn-primary" target="_blank">
-                                        🚀 View Project
-                                    </a>
-                                    <a href="${githubUrl}" class="btn btn-secondary" target="_blank">
-                                        📝 View Source
-                                    </a>
+                                    <a href="${file}" class="btn btn-primary" target="_blank">🚀 View Project</a>
+                                    <a href="${githubUrl}" class="btn btn-secondary" target="_blank">📝 View Source</a>
                                 </div>
                             </div>
                         `);
                         grid.append(card);
                     });
                 }
-                
                 $('#fileCount').text(files.length);
-                
-                // Store files for search functionality
-                window.allFiles = files;
             }
-
-            // Search functionality
+            $('#filesGrid').on('click', '.folder-card', function() {
+                const folder = $(this).data('folder');
+                renderFiles(folder);
+            });
+            $('.back-btn').on('click', function() {
+                renderFolders(allFolderNames);
+            });
             $('#searchInput').on('input', function() {
                 const searchTerm = $(this).val().toLowerCase();
-                const filteredFiles = window.allFiles.filter(file => 
-                    file.title.toLowerCase().includes(searchTerm) ||
-                    file.description.toLowerCase().includes(searchTerm) ||
-                    file.name.toLowerCase().includes(searchTerm)
-                );
-                renderFiles(filteredFiles);
+                if (!currentFolder) {
+                    // Searching folders
+                    const filtered = allFolderNames.filter(f => f.toLowerCase().includes(searchTerm));
+                    renderFolders(filtered);
+                } else {
+                    // Searching files in current folder
+                    const files = allFolders[currentFolder] || [];
+                    const filtered = files.filter(f => getFileTitle(f).toLowerCase().includes(searchTerm) || f.toLowerCase().includes(searchTerm));
+                    renderFilesFiltered(currentFolder, filtered);
+                }
             });
-
-            // Initialize
+            function renderFilesFiltered(folder, files) {
+                const grid = $('#filesGrid');
+                grid.empty();
+                if (files.length === 0) {
+                    $('#noResults').show();
+                    grid.hide();
+                } else {
+                    $('#noResults').hide();
+                    grid.show();
+                    files.forEach(file => {
+                        const githubUrl = `https://github.com/pratham7723/webui/blob/main/index/${file}`;
+                        const card = $(`
+                            <div class="file-card">
+                                <div class="file-icon">📄</div>
+                                <div class="file-name">${getFileTitle(file)}</div>
+                                <div class="file-description">${getFileDescription(file)}</div>
+                                <div class="file-actions">
+                                    <a href="${file}" class="btn btn-primary" target="_blank">🚀 View Project</a>
+                                    <a href="${githubUrl}" class="btn btn-secondary" target="_blank">📝 View Source</a>
+                                </div>
+                            </div>
+                        `);
+                        grid.append(card);
+                    });
+                }
+                $('#fileCount').text(files.length);
+            }
             setTimeout(() => {
                 $('#loading').hide();
                 discoverHtmlFiles();
             }, 500);
-
-            // Add some interactivity
             $(document).on('click', '.btn', function(e) {
                 e.stopPropagation();
                 $(this).addClass('clicked');
