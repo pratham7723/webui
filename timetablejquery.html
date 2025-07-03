@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Table with Row/Column Highlighting</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Default cell styling */
+        td {
+            background-color: #f9f9f9;
+        }
+        
+        /* Hover effect for the cell being hovered */
+        td:hover {
+            background-color: #ffeb3b !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+            position: relative;
+        }
+        
+        /* Row highlighting */
+        .row-highlight {
+            background-color: #e8f5e8 !important;
+        }
+        
+        /* Column highlighting */
+        .col-highlight {
+            background-color: #fff3cd !important;
+        }
+        
+        /* Cell that is both in highlighted row and column */
+        .row-highlight.col-highlight {
+            background-color: #d4edda !important;
+        }
+        
+        .info {
+            background-color: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>jQuery Table with Row/Column Highlighting</h1>
+        
+        <div class="info">
+            <strong>Instructions:</strong> Hover over any cell in the table to see both the row and column highlighted simultaneously.
+        </div>
+        
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>9:00 AM</td>
+                    <td>Math</td>
+                    <td>Science</td>
+                    <td>English</td>
+                    <td>History</td>
+                    <td>Art</td>
+                </tr>
+                <tr>
+                    <td>10:00 AM</td>
+                    <td>Physics</td>
+                    <td>Chemistry</td>
+                    <td>Literature</td>
+                    <td>Geography</td>
+                    <td>Music</td>
+                </tr>
+                <tr>
+                    <td>11:00 AM</td>
+                    <td>Biology</td>
+                    <td>Algebra</td>
+                    <td>Grammar</td>
+                    <td>Civics</td>
+                    <td>Drama</td>
+                </tr>
+                <tr>
+                    <td>12:00 PM</td>
+                    <td>Lunch</td>
+                    <td>Lunch</td>
+                    <td>Lunch</td>
+                    <td>Lunch</td>
+                    <td>Lunch</td>
+                </tr>
+                <tr>
+                    <td>1:00 PM</td>
+                    <td>Computer Science</td>
+                    <td>Geometry</td>
+                    <td>Writing</td>
+                    <td>Economics</td>
+                    <td>Physical Education</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Function to clear all highlights
+            function clearHighlights() {
+                $('td, th').removeClass('row-highlight col-highlight');
+            }
+            
+            // Function to get column index
+            function getColumnIndex(element) {
+                return $(element).index();
+            }
+            
+            // Hover effect for table cells
+            $('#dataTable tbody td, #dataTable thead th').hover(
+                function() {
+                    // Clear previous highlights
+                    clearHighlights();
+                    
+                    // Get current cell's column
+                    const $currentCell = $(this);
+                    const columnIndex = getColumnIndex($currentCell);
+                    
+                    // Highlight the entire row
+                    $currentCell.parent().find('td, th').addClass('row-highlight');
+                    
+                    // Highlight the entire column
+                    $('#dataTable tr').each(function() {
+                        $(this).find('td, th').eq(columnIndex).addClass('col-highlight');
+                    });
+                },
+                function() {
+                    // Clear highlights when mouse leaves
+                    clearHighlights();
+                }
+            );
+        });
+    </script>
+</body>
+</html>
