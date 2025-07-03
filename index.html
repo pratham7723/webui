@@ -128,6 +128,51 @@
             color: #666;
             font-size: 0.9rem;
             line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            border-color: #4CAF50;
+            transform: translateY(-2px);
         }
 
         .file-link {
@@ -209,6 +254,9 @@
         <div class="header">
             <h1>Web UI Projects</h1>
             <p>Interactive jQuery and JavaScript Examples</p>
+            <a href="https://github.com/pratham7723/webui" target="_blank" style="color: white; text-decoration: none; margin-top: 10px; display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.9rem;">
+                📁 View on GitHub
+            </a>
         </div>
         
         <div class="content">
@@ -374,13 +422,20 @@
                     grid.show();
                     
                     files.forEach(file => {
+                        const githubUrl = `https://github.com/pratham7723/webui/blob/main/${file.name}`;
                         const card = $(`
                             <div class="file-card">
-                                <a href="${file.name}" class="file-link" target="_blank">
-                                    <div class="file-icon">📄</div>
-                                    <div class="file-name">${file.title}</div>
-                                    <div class="file-description">${file.description}</div>
-                                </a>
+                                <div class="file-icon">📄</div>
+                                <div class="file-name">${file.title}</div>
+                                <div class="file-description">${file.description}</div>
+                                <div class="file-actions">
+                                    <a href="${file.name}" class="btn btn-primary" target="_blank">
+                                        🚀 View Project
+                                    </a>
+                                    <a href="${githubUrl}" class="btn btn-secondary" target="_blank">
+                                        📝 View Source
+                                    </a>
+                                </div>
                             </div>
                         `);
                         grid.append(card);
@@ -411,7 +466,8 @@
             }, 500);
 
             // Add some interactivity
-            $(document).on('click', '.file-card', function() {
+            $(document).on('click', '.btn', function(e) {
+                e.stopPropagation();
                 $(this).addClass('clicked');
                 setTimeout(() => {
                     $(this).removeClass('clicked');
