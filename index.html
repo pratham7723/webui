@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web UI Projects - Index</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .search-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .file-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #4CAF50;
+        }
+
+        .file-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .file-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .file-icon {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .file-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .file-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .file-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .stats {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stats span {
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 0 10px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Web UI Projects</h1>
+            <p>Interactive jQuery and JavaScript Examples</p>
+        </div>
+        
+        <div class="content">
+            <div class="stats">
+                <span id="fileCount">0</span> projects available
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search projects...">
+            </div>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading projects...</p>
+            </div>
+            
+            <div id="filesGrid" class="files-grid" style="display: none;">
+                <!-- Files will be populated here -->
+            </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <p>No projects found matching your search.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Hosted on Vercel | Built with HTML, CSS, and jQuery</p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Function to get file description based on filename
+            function getFileDescription(filename) {
+                const descriptions = {
+                    'timetablejquery.html': 'Interactive timetable where hovering over any cell highlights both the row and column simultaneously.',
+                    'jqueryperodictable.html': 'Interactive periodic table with element information and hover effects.',
+                    'keypress.html': 'Demonstrates various keyboard events and their handling with jQuery.',
+                    'submit.html': 'Interactive form with validation and submission handling.',
+                    'onchange.html': 'Shows how to handle change events in form elements.',
+                    'mousewalk.html': 'Tracks mouse movement and creates visual effects.',
+                    'mouseupdown.html': 'Demonstrates mouse up and down event handling.',
+                    'animate.html': 'Various jQuery animation effects and transitions.',
+                    'fadeinout.html': 'Demonstrates fade in and fade out animations.',
+                    'headingpara.html': 'Interactive headings and paragraphs with jQuery effects.',
+                    'jqueryborder.html': 'Dynamic border effects and styling with jQuery.',
+                    'ajax.html': 'Basic AJAX functionality demonstration.',
+                    'size.html': 'Demonstrates element sizing and dimension manipulation.',
+                    '1.html': 'Basic HTML demonstration page.'
+                };
+                
+                return descriptions[filename] || 'Interactive web demonstration with jQuery and JavaScript.';
+            }
+
+            // Function to get file title based on filename
+            function getFileTitle(filename) {
+                const titles = {
+                    'timetablejquery.html': 'Timetable with Row/Column Highlighting',
+                    'jqueryperodictable.html': 'Periodic Table',
+                    'keypress.html': 'Keyboard Events Demo',
+                    'submit.html': 'Form Submission Demo',
+                    'onchange.html': 'Change Events Demo',
+                    'mousewalk.html': 'Mouse Movement Tracker',
+                    'mouseupdown.html': 'Mouse Up/Down Events',
+                    'animate.html': 'jQuery Animations',
+                    'fadeinout.html': 'Fade In/Out Effects',
+                    'headingpara.html': 'Heading and Paragraph Demo',
+                    'jqueryborder.html': 'Border Effects',
+                    'ajax.html': 'AJAX Demo',
+                    'size.html': 'Element Size Demo',
+                    '1.html': 'Basic HTML Demo'
+                };
+                
+                // Generate title from filename if not in predefined list
+                if (!titles[filename]) {
+                    const nameWithoutExt = filename.replace('.html', '');
+                    return nameWithoutExt.charAt(0).toUpperCase() + nameWithoutExt.slice(1).replace(/([A-Z])/g, ' $1');
+                }
+                
+                return titles[filename];
+            }
+
+            // Function to check if a file exists
+            function checkFileExists(filename) {
+                return new Promise((resolve) => {
+                    $.ajax({
+                        url: filename,
+                        method: 'HEAD',
+                        timeout: 3000,
+                        success: function() {
+                            resolve(true);
+                        },
+                        error: function() {
+                            resolve(false);
+                        }
+                    });
+                });
+            }
+
+            // Function to discover HTML files by checking each known file
+            async function discoverHtmlFiles() {
+                const knownFiles = [
+                    'timetablejquery.html',
+                    'jqueryperodictable.html',
+                    'keypress.html',
+                    'submit.html',
+                    'onchange.html',
+                    'mousewalk.html',
+                    'mouseupdown.html',
+                    'animate.html',
+                    'fadeinout.html',
+                    'headingpara.html',
+                    'jqueryborder.html',
+                    'ajax.html',
+                    'size.html',
+                    '1.html'
+                ];
+                
+                const existingFiles = [];
+                
+                // Check each file to see if it exists
+                for (const filename of knownFiles) {
+                    const exists = await checkFileExists(filename);
+                    if (exists) {
+                        existingFiles.push({
+                            name: filename,
+                            title: getFileTitle(filename),
+                            description: getFileDescription(filename)
+                        });
+                    }
+                }
+                
+                // Also try to discover any other HTML files by checking common patterns
+                const additionalFiles = [
+                    'demo.html', 'test.html', 'example.html', 'project.html',
+                    'app.html', 'main.html', 'index2.html', 'page.html'
+                ];
+                
+                for (const filename of additionalFiles) {
+                    const exists = await checkFileExists(filename);
+                    if (exists) {
+                        existingFiles.push({
+                            name: filename,
+                            title: getFileTitle(filename),
+                            description: getFileDescription(filename)
+                        });
+                    }
+                }
+                
+                renderFiles(existingFiles);
+            }
+
+            // Function to render files
+            function renderFiles(files) {
+                const grid = $('#filesGrid');
+                grid.empty();
+                
+                if (files.length === 0) {
+                    $('#noResults').show();
+                    grid.hide();
+                } else {
+                    $('#noResults').hide();
+                    grid.show();
+                    
+                    files.forEach(file => {
+                        const card = $(`
+                            <div class="file-card">
+                                <a href="${file.name}" class="file-link" target="_blank">
+                                    <div class="file-icon">📄</div>
+                                    <div class="file-name">${file.title}</div>
+                                    <div class="file-description">${file.description}</div>
+                                </a>
+                            </div>
+                        `);
+                        grid.append(card);
+                    });
+                }
+                
+                $('#fileCount').text(files.length);
+                
+                // Store files for search functionality
+                window.allFiles = files;
+            }
+
+            // Search functionality
+            $('#searchInput').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                const filteredFiles = window.allFiles.filter(file => 
+                    file.title.toLowerCase().includes(searchTerm) ||
+                    file.description.toLowerCase().includes(searchTerm) ||
+                    file.name.toLowerCase().includes(searchTerm)
+                );
+                renderFiles(filteredFiles);
+            });
+
+            // Initialize
+            setTimeout(() => {
+                $('#loading').hide();
+                discoverHtmlFiles();
+            }, 500);
+
+            // Add some interactivity
+            $(document).on('click', '.file-card', function() {
+                $(this).addClass('clicked');
+                setTimeout(() => {
+                    $(this).removeClass('clicked');
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html> 
